@@ -3,6 +3,13 @@
   <servlet>
     <servlet-name>Welcome</servlet-name>
     <servlet-class>linfeng.com.Welcome</servlet-class>
+    
+    <multipart-config>
+    	<location>/Users/linfengwang/file_upload</location>
+    	<max-file-size>10485760</max-file-size> <!-- 10 Mo -->
+    	<max-request-size>52428800</max-request-size><!-- 5*10 Mo -->
+    	<file-size-threshold>1048576</file-size-threshold><!-- 1 Mo -->
+    </multipart-config>
   </servlet>
   <servlet-mapping>
     <servlet-name>Welcome</servlet-name>
@@ -16,4 +23,12 @@
     <servlet-name>Home</servlet-name>
     <url-pattern>/home</url-pattern>
   </servlet-mapping>
+  
+  <jsp-config>
+  	<jsp-property-group>
+  		<url-pattern>*.jsp</url-pattern>
+  		<include-prelude>/WEB-INF/taglib.jsp</include-prelude>
+  	</jsp-property-group>
+  </jsp-config>
+  
 </web-app>
