@@ -6,13 +6,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<title><%
-	if(request.getAttribute("time").toString().equals("day")){
-		out.println("day");
-	}else{
-		out.println("night");
-	}
-%>
+<title>
+<c:if test="${!empty userName }">
+	<c:out value="${userName}"/>
+</c:if>
 </title>
 
 </head>
@@ -29,21 +26,21 @@
 	scope=request: pour tous les forwards.
 	scope=session: pour les session.
 	scope=application: pour touste application.
+	
+		//remove one variable from memory.
+		<p><c:out value="${pseudo}"></c:out></p>
+		<p><c:remove var="pseudo"/>
 	 -->
 	 
-	 <p><c:out value="${pseudo}"></c:out></p>
-	<!-- 
-		remove one variable from memory.
-	 -->
-	 <p><c:remove var="pseudo"/>
+
 	 <!-- 
 		remove one variable from memory.
-		 <c:set target="${user}" property = "name" value="lee"/>
-	 <p><c:out value="${user.name}"></c:out>
+		 <c:set target="${user}" property = "firstName" value="lee"/>
+	 <p><c:out value="${user.firstName}"></c:out>
 	 -->
 	
-	 <c:set target="${ user }" property="name" value="Mathieu" />
-	 <p><c:out value="${ user.name }" /></p>
+	 <c:set target="${ user }" property="firstName" value="Mathieu" />
+	 <p><c:out value="${ user.firstName }" /></p>
 	 
 	  <!-- 
 		condition en jstl
@@ -61,7 +58,7 @@
 	 <!-- 
 		condition boucle
 	 -->
-	 <c:forEach var ="i" begin="1" end = "10" step="1">
+	 <c:forEach var ="i" begin="1" end = "4" step="1">
 	 	<p>for each boucle N°<c:out value= "${i}"/> fois</p>
 	 </c:forEach>
 	 
@@ -73,12 +70,36 @@
 	 	<p>${piece}</p>
 	 </c:forTokens>
 	 
-	  <!-- 
-		formulaire
-	 -->
+	 <c:forEach items="${ userDB }" var ="user" varStatus = "status">
+	 	<p>
+	 		N°:<c:out value="${${status.count} }"/> First Name:<c:out value="${user.firstName}"></c:out>
+	 	</p>
+	 </c:forEach>
 	 
-	 <form method="POST" action="welcome" >
-		 <p>
+	 <c:if test="${empty userDB}">
+	 	<c:out value="yes, empty"/>
+	 </c:if>	 
+	  <!-- 
+		formulaire avec session
+	 -->
+	 <c:if test="${! empty sessionScope.login }">
+	 	<p>Bienvenue:${sessionScope.login}</p>
+	 </c:if>
+
+	 
+	 <c:if test="${! empty connection}">
+	 	  <p><c:out value="${connection}"/></p>
+	 </c:if>
+	 
+	  <!-- 
+		envoyer les fichiers
+	 -->
+	 <c:if test="${ !empty fileName }">
+	 	<c:out value="Le fichier ${fileName} a été téléchargé."/>
+	 </c:if>
+	 
+	 <form method="POST" action="welcome" enctype="multipart/form-data">
+	  	 <p>
 			<label for="login">Compte:</label>
 		 	<input type="text" id="login" name ="login"/>
 		 </p>
@@ -88,21 +109,6 @@
 		 	<input type="password" id="pass" name ="pass"/>
 		 </p>
 		 
-	 		<input type="submit" value="envoyer">
-	 </form>
-	 
-	 <c:if test="${! empty form.result}">
-	 	  <p><c:out value="${form.result}"/></p>
-	 </c:if>
-	 
-	  <!-- 
-		envoyer les fichiers
-	 -->
-	 <c:if test="${ !empty fichier }">
-	 	<c:out value="Le fichier ${fichier}(${desc}) a été téléchargé."/>
-	 </c:if>
-	 
-	 <form method="POST" action="welcome" enctype="multipart/form-data">
 	 	<p>
 			<label for="desc">Description:</label>
 		 	<input type="text" id="desc" name ="desc"/>
@@ -115,10 +121,6 @@
 		 
 		 <input type="submit" value="envoyer"/>
 	 </form>
-	 
-	 <c:if test="${!empty fileName }">
-	 	<c:out value="fileName:${fileName}"/>
-	 </c:if>
 	 
 </body>
 </html>

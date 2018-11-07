@@ -14,13 +14,16 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import linfeng.forms.ConnectionForm;
 import linfeng.beans.User;
+import linfeng.db.UsersDB;
 
 /**
  * Servlet implementation class Test
@@ -36,50 +39,76 @@ public class Welcome extends HttpServlet {
     public Welcome() {
         super();
     }
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String messages [] = {"Paris","Rome","Londre","Berlin","Madrid"};
 		request.setAttribute("messages", messages);
 		request.setAttribute("time", "night");
 		String paramName = request.getParameter("name");
 		
-		//user
+		//user for testing the jstl bean properties.
+
 		User user = new User();
-		user.setAge(12);
-		user.setName("lee bruce");
-		user.setDomaine("art martieux");
+		user.setFirstName("lee");
+		user.setLastName("bruce");
 		request.setAttribute("user", user);
-		request.setAttribute("urlname", paramName);
+	
+		//using data from database(mysql)
+		UsersDB userDB = new UsersDB();
+		request.setAttribute("userDB", userDB.getUsers());
+		
+		//get the session value and delete session;
+		HttpSession session = request.getSession();
+		String nameFromSession = (String) session.getAttribute("login");
+		//session.invalidate();
+		
+		Cookie[] cookies = request.getCookies();
+		if(cookies !=null) {
+			for(Cookie cookie:cookies) {
+				if(cookie.getName().equals("userName")) {
+					request.setAttribute("userName", cookie.getValue());
+				}
+			}
+		}
+		
 		this.getServletContext().getRequestDispatcher("/WEB-INF/welcome.jsp").forward(request, response);
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//authentification and session;
 		/*
 		ConnectionForm form = new ConnectionForm();
 		form.authentification(request);
-		request.setAttribute("form", form);
-		 */
-		
-		//treat the uploading file;
-		
-		String desc = request.getParameter("desc");
-		request.setAttribute("desc", desc);
-		Part part = request.getPart("myfile");
-		//get the name of the file;
-		String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-		request.setAttribute("fileName", fileName);
-		
-		//save the file into the destination repo;
-		saveFileLocal(request,part,fileName,FILE_PATH);
-		
-		doGet(request, response);
-	}
-	
-	private static String getUploadingFileName (Part part) {
-		for(String contentDisposition:part.getHeader("content-disposition").split(";")) {
-			if(contentDisposition.trim().startsWith("filename")) {
-				return contentDisposition.substring(contentDisposition.indexOf("=")+1);
-			}
+		request.setAttribute("form", form); 
+		*/
+		String login = request.getParameter("login");
+		String pass = request.getParameter("pass");
+		//set a cookie
+		Cookie cookie = new Cookie("userName",login);
+		cookie.setMaxAge(60*60*60);
+		response.addCookie(cookie);
+						
+		if(pass.toUpperCase().equals(login.toUpperCase()+"123")) {
+			request.setAttribute("connection", "Connecté");
+			
+			HttpSession session = request.getSession();
+			session.setAttribute("login", login);
+			session.setAttribute("pass", pass);
 		}
-		return null;
+	
+		
+		if(request.getPart("myfile").getSize() != 0) {
+			//treat the uploading file;
+			String desc = request.getParameter("desc");
+			request.setAttribute("desc", desc);
+			
+			Part part = request.getPart("myfile");
+			//get the name of the file;
+			String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+			request.setAttribute("fileName", fileName);
+			//save the file into the destination repo;
+			saveFileLocal(request,part,fileName,FILE_PATH);	
+		}
+		doGet(request, response);
 	}
 	
 	private void saveFileLocal(HttpServletRequest request,Part part,String fileName,String path) throws IOException {

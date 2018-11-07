@@ -1,34 +1,18 @@
 package linfeng.beans;
 
 public class User {
-	private String name;
-	private int age;
-	private boolean working;
-	private String domaine;
-	
-	public String getName() {
-		return name;
+	private String firstName;
+	private String lastName;
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
-	public int getAge() {
-		return age;
+	public String getLastName() {
+		return lastName;
 	}
-	public void setAge(int age) {
-		this.age = age;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
-	public boolean isWorking() {
-		return working;
-	}
-	public void setWorking(boolean isWorking) {
-		this.working = isWorking;
-	}
-	public String getDomaine() {
-		return domaine;
-	}
-	public void setDomaine(String domaine) {
-		this.domaine = domaine;
-	}
-	
 }
