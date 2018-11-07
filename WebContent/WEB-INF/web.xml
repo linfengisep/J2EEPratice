@@ -2,7 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
   <servlet>
     <servlet-name>Welcome</servlet-name>
-    <servlet-class>linfeng.com.Welcome</servlet-class>
+    <servlet-class>linfeng.servlets.Welcome</servlet-class>
     
     <multipart-config>
     	<location>/Users/linfengwang/file_upload</location>
@@ -17,7 +17,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>Home</servlet-name>
-    <servlet-class>linfeng.com.Home</servlet-class>
+    <servlet-class>linfeng.servlets.Home</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Home</servlet-name>

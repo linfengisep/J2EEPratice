@@ -109,15 +109,15 @@
 		 </p>
 		 
 		 <p>
-			<label for=_file>File:</label>
-		 	<input type="file" id="_file" name ="_file"/>
+			<label for=myfile>File:</label>
+		 	<input type="file" id="myfile" name ="myfile"/>
 		 </p>
 		 
 		 <input type="submit" value="envoyer"/>
 	 </form>
 	 
 	 <c:if test="${!empty fileName }">
-	 	<c:out value="fileName:{fileName}"/>
+	 	<c:out value="fileName:${fileName}"/>
 	 </c:if>
 	 
 </body>
