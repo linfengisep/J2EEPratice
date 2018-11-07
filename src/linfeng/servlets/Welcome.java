@@ -108,6 +108,15 @@ public class Welcome extends HttpServlet {
 			//save the file into the destination repo;
 			saveFileLocal(request,part,fileName,FILE_PATH);	
 		}
+		
+		//save the login and pass into the database;
+		User user = new User();
+		user.setFirstName(login);
+		user.setLastName(pass);
+		UsersDB userDB = new UsersDB();
+		userDB.addUser(user);
+		request.setAttribute("userDB", userDB.getUsers());
+		
 		doGet(request, response);
 	}
 	
