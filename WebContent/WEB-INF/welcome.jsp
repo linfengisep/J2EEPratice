@@ -72,7 +72,7 @@
 	 
 	 <c:forEach items="${ userDB }" var ="user" varStatus = "status">
 	 	<p>
-	 		N°:<c:out value="${${status.count} }"/> First Name:<c:out value="${user.firstName}"></c:out>
+	 		N°:<c:out value="${status.count}"/> First Name:<c:out value="${user.firstName}"></c:out>
 	 	</p>
 	 </c:forEach>
 	 
