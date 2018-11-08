@@ -22,17 +22,16 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import linfeng.forms.ConnectionForm;
+import linfeng.beans.BeanException;
 import linfeng.beans.User;
+import linfeng.dao.DaoException;
+import linfeng.dao.DaoFactory;
+import linfeng.dao.UserDaoImpl;
 import linfeng.db.UsersDB;
 
-/**
- * Servlet implementation class Test
- */
 @WebServlet("/Welcome")
 @MultipartConfig
 public class Welcome extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	
 	private static final int SIZE = 10240;
 	private static final String FILE_PATH= "/Users/linfengwang/file_upload/";
   
@@ -49,13 +48,28 @@ public class Welcome extends HttpServlet {
 		//user for testing the jstl bean properties.
 
 		User user = new User();
-		user.setFirstName("lee");
+		try {
+			user.setFirstName("lee");
+		} catch (BeanException e1) {
+			request.setAttribute("error", e1.getMessage());
+		}
 		user.setLastName("bruce");
 		request.setAttribute("user", user);
 	
 		//using data from database(mysql)
+		/*
 		UsersDB userDB = new UsersDB();
 		request.setAttribute("userDB", userDB.getUsers());
+		*/
+	
+		UserDaoImpl userDao = new UserDaoImpl(DaoFactory.getInstance());
+		try {
+			request.setAttribute("userDB", userDao.getUsers());
+		}catch(DaoException e) {
+			
+		}catch(BeanException e) {
+			
+		}
 		
 		//get the session value and delete session;
 		HttpSession session = request.getSession();
@@ -110,13 +124,14 @@ public class Welcome extends HttpServlet {
 		}
 		
 		//save the login and pass into the database;
+		/*
 		User user = new User();
 		user.setFirstName(login);
 		user.setLastName(pass);
 		UsersDB userDB = new UsersDB();
 		userDB.addUser(user);
 		request.setAttribute("userDB", userDB.getUsers());
-		
+		*/
 		doGet(request, response);
 	}
 	

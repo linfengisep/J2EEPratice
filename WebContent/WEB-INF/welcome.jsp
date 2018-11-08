@@ -97,6 +97,10 @@
 	 <c:if test="${ !empty fileName }">
 	 	<c:out value="Le fichier ${fileName} a été téléchargé."/>
 	 </c:if>
+	 <!-- check the validation of input -->
+	 <c:if test="${! empty error}">
+	 	<c:out value="${error}"/>
+	 </c:if>
 	 
 	 <form method="POST" action="welcome" enctype="multipart/form-data">
 	  	 <p>
