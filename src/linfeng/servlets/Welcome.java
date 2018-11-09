@@ -123,15 +123,19 @@ public class Welcome extends HttpServlet {
 			saveFileLocal(request,part,fileName,FILE_PATH);	
 		}
 		
-		//save the login and pass into the database;
-		/*
-		User user = new User();
-		user.setFirstName(login);
-		user.setLastName(pass);
-		UsersDB userDB = new UsersDB();
-		userDB.addUser(user);
-		request.setAttribute("userDB", userDB.getUsers());
-		*/
+		//save the login and pass into the database and show them;
+		UserDaoImpl userDao = new UserDaoImpl(DaoFactory.getInstance());
+		try {
+			User user = new User();
+			user.setFirstName(login);
+			user.setLastName(pass);
+			userDao.addUser(user);
+			request.setAttribute("userDB", userDao.getUsers());
+		}catch(DaoException e) {
+			
+		}catch(BeanException e) {
+			
+		}
 		doGet(request, response);
 	}
 	
